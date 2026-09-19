@@ -14,9 +14,6 @@ REQUIRED_COLUMNS = {
     "quantity",
 }
 
-if "category" not in df.columns:
-    df["category"] = ""
-
 def load_product_data(file_path):
     path = Path(file_path)
 
@@ -42,6 +39,29 @@ def load_product_data(file_path):
         .replace(" ", "_")
         for column in df.columns
     ]
+
+    # Standardize column names
+    df.columns = [
+        str(column)
+        .strip()
+        .lower()
+        .replace(" ", "_")
+        for column in df.columns
+    ]
+
+    # Category is optional
+    if "category" not in df.columns:
+        df["category"] = ""
+
+    missing_columns = REQUIRED_COLUMNS - set(df.columns)
+
+    if missing_columns:
+        raise ValueError(
+            "Missing required columns: "
+            + ", ".join(sorted(missing_columns))
+        )
+
+    return df
 
     missing_columns = REQUIRED_COLUMNS - set(df.columns)
 

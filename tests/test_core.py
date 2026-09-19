@@ -1,6 +1,9 @@
 import pandas as pd
 
-from ebay_fees import calculate_ebay_fee_jpy
+from ebay_fees import (
+    calculate_ebay_fee_jpy,
+    calculate_ebay_break_even_price_jpy,
+)
 from ranking import rank_products
 from data_cleaner import clean_and_validate_product_data
 from duplicates import handle_duplicates
@@ -593,3 +596,16 @@ def test_ebay_integrates_with_profitability():
 
     assert row["platform_fee"] == 2302.50
     assert row["profit"] == 4197.50
+    assert row["break_even_price"] == 10064.67
+
+def test_ebay_break_even_price():
+        base_cost = 8500
+
+        result = calculate_ebay_break_even_price_jpy(
+            base_cost,
+            1,
+            EBAY_TEST_CONFIG,
+            "Most Categories",
+        )
+
+        assert result == 10064.67

@@ -2,11 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d448c5a0-274d-499c-99c4-8741749b7214" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/ec-ops-tool.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ebay_fees.py" beforeDir="false" afterPath="$PROJECT_DIR$/ebay_fees.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/input/products.csv" beforeDir="false" afterPath="$PROJECT_DIR$/input/products.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/profitability.py" beforeDir="false" afterPath="$PROJECT_DIR$/profitability.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_core.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_core.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

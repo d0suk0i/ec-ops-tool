@@ -1,6 +1,9 @@
 import json
 
-from ebay_fees import calculate_ebay_fee_jpy
+from ebay_fees import (
+    calculate_ebay_fee_jpy,
+    calculate_ebay_break_even_price_jpy,
+)
 from pathlib import Path
 
 import pandas as pd
@@ -745,7 +748,14 @@ def calculate_profitability(
             roi_pct = pd.NA
 
         if fee_model == "ebay_us_japan_seller":
-            break_even_price = pd.NA
+            break_even_price = (
+                calculate_ebay_break_even_price_jpy(
+                    base_cost,
+                    quantity,
+                    platform_config,
+                    category,
+                )
+            )
 
         else:
             effective_fee_rate = (

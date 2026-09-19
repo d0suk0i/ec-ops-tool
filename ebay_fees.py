@@ -120,3 +120,94 @@ def calculate_ebay_fee_jpy(
         "international_fee_jpy": international_fee_jpy,
         "sale_amount_usd": gross_revenue_usd,
     }
+
+def calculate_ebay_break_even_price_jpy(
+    base_cost_jpy,
+    quantity,
+    platform_config,
+    category,
+):
+    if quantity <= 0:
+        return None
+
+    if base_cost_jpy < 0:
+        return None
+
+    def profit_at_price(unit_price_jpy):
+        gross_revenue_jpy = (
+            unit_price_jpy * quantity
+        )
+
+        fee_result = calculate_ebay_fee_jpy(
+            gross_revenue_jpy,
+            platform_config,
+            category,
+        )
+
+        if fee_result is None:
+            return None
+
+        return (
+            gross_revenue_jpy
+            - base_cost_jpy
+            - fee_result["total_fee_jpy"]
+        )
+
+    low = 0.0
+
+    high = max(
+        base_cost_jpy / quantity,
+        1.0,
+    )
+
+    high_profit = profit_at_price(
+        high
+    )
+
+    if high_profit is None:
+        return None
+
+    # Expand the search range until
+    # the candidate price becomes profitable.
+    attempts = 0
+
+    while (
+        high_profit < 0
+        and attempts < 100
+    ):
+        high *= 2
+
+        high_profit = profit_at_price(
+            high
+        )
+
+        attempts += 1
+
+    if high_profit < 0:
+        raise ValueError(
+            "Unable to determine eBay break-even price."
+        )
+
+    # Binary search for the lowest
+    # profitable unit sale price.
+    for _ in range(100):
+        midpoint = (
+            low + high
+        ) / 2
+
+        midpoint_profit = profit_at_price(
+            midpoint
+        )
+
+        if midpoint_profit is None:
+            return None
+
+        if midpoint_profit < 0:
+            low = midpoint
+        else:
+            high = midpoint
+
+    return round(
+        high,
+        2
+    )

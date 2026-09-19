@@ -1,8 +1,9 @@
-sku,product_name,platform,sale_price,item_cost,shipping_cost,other_costs,quantity
-SKU001,Wireless Mouse,Mercari,3980,1800,450,0,1
-SKU002,USB-C Hub,Yahoo Auctions,5980,2500,750,200,1
-SKU003,Mechanical Keyboard,Mercari,7980,4200,850,0,1
-SKU003,Mechanical Keyboard,Mercari,7980,4200,850,0,1
-SKU004,Webcam,Mercari,4980,,450,0,1
+sku,product_name,platform,sale_price,item_cost,shipping_cost,other_costs,quantity,category
+SKU001,Wireless Mouse,Mercari,3980,1800,450,0,1,
+SKU002,USB-C Hub,Yahoo Auctions,5980,2500,750,200,1,
+SKU003,Mechanical Keyboard,Mercari,7980,4200,850,0,1,
+SKU003,Mechanical Keyboard,Mercari,7980,4200,850,0,1,
+SKU004,Webcam,Mercari,4980,,450,0,1,
 SKU005,Portable SSD,Yahoo! Flea Market,6500,3200,450,0,1
 SKU006,Golf Rangefinder,Rakuma,12000,7000,750,100,1
+SKU007,Camera Lens,eBay,15000,7000,1500,0,1,Most Categories
