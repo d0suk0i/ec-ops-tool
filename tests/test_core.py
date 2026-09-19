@@ -1,5 +1,9 @@
 import pandas as pd
 
+from store_fees import (
+    calculate_store_fee_jpy,
+    calculate_store_break_even_price_jpy,
+)
 from ebay_fees import (
     calculate_ebay_fee_jpy,
     calculate_ebay_break_even_price_jpy,
@@ -609,3 +613,42 @@ def test_ebay_break_even_price():
         )
 
         assert result == 10064.67
+YAHOO_SHOPPING_TEST_CONFIG = {
+    "monthly_fixed_fee": 10000,
+    "estimated_monthly_orders": 200,
+
+    "variable_fee_components": {
+        "sales_royalty": 0.025,
+        "store_points": 0.01,
+        "payment_estimate": 0.03,
+    },
+}
+
+
+def test_yahoo_shopping_store_fee():
+    result = calculate_store_fee_jpy(
+        5000,
+        YAHOO_SHOPPING_TEST_CONFIG,
+    )
+
+    assert result[
+        "allocated_fixed_fee_jpy"
+    ] == 50
+
+    assert result[
+        "variable_fee_jpy"
+    ] == 325
+
+    assert result[
+        "total_fee_jpy"
+    ] == 375
+
+
+def test_yahoo_shopping_break_even():
+    result = calculate_store_break_even_price_jpy(
+        2500,
+        1,
+        YAHOO_SHOPPING_TEST_CONFIG,
+    )
+
+    assert result == 2727.27
