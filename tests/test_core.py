@@ -652,3 +652,78 @@ def test_yahoo_shopping_break_even():
     )
 
     assert result == 2727.27
+
+def test_yahoo_shopping_integrates_with_profitability():
+    fees = {
+        "yahoo shopping": {
+            "display_name": "Yahoo! Shopping",
+            "fee_model": "subscription_plus_variable",
+            "enabled": True,
+            "monthly_fixed_fee": 10000,
+            "estimated_monthly_orders": 200,
+            "variable_fee_components": {
+                "sales_royalty": 0.025,
+                "store_points": 0.01,
+                "payment_estimate": 0.03,
+            },
+        }
+    }
+
+    df = make_product_dataframe()
+
+    df.loc[0, "platform"] = "Yahoo Shopping"
+    df.loc[0, "sale_price"] = 5000
+    df.loc[0, "item_cost"] = 2000
+    df.loc[0, "shipping_cost"] = 500
+    df.loc[0, "other_costs"] = 0
+    df.loc[0, "quantity"] = 1
+
+    result = calculate_profitability(
+        df,
+        fees
+    )
+
+    row = result.iloc[0]
+
+    assert row["platform_fee"] == 375
+    assert row["total_cost"] == 2875
+    assert row["profit"] == 2125
+    assert row["break_even_price"] == 2727.27
+
+def test_rakuten_ichiba_integrates_with_profitability():
+    fees = {
+        "rakuten ichiba": {
+            "display_name": "Rakuten Ichiba",
+            "fee_model": "subscription_plus_variable",
+            "enabled": True,
+            "monthly_fixed_fee": 25000,
+            "estimated_monthly_orders": 200,
+            "variable_fee_components": {
+                "system_usage_estimate": 0.055,
+                "rakuten_points": 0.01,
+                "transaction_safety": 0.001,
+                "rakuten_pay_estimate": 0.03,
+            },
+        }
+    }
+
+    df = make_product_dataframe()
+
+    df.loc[0, "platform"] = "Rakuten Ichiba"
+    df.loc[0, "sale_price"] = 5000
+    df.loc[0, "item_cost"] = 2000
+    df.loc[0, "shipping_cost"] = 500
+    df.loc[0, "other_costs"] = 0
+    df.loc[0, "quantity"] = 1
+
+    result = calculate_profitability(
+        df,
+        fees
+    )
+
+    row = result.iloc[0]
+
+    assert row["platform_fee"] == 605
+    assert row["total_cost"] == 3105
+    assert row["profit"] == 1895
+    assert row["break_even_price"] == 2903.76

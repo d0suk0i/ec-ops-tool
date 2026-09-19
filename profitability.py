@@ -1,5 +1,10 @@
 import json
 
+from store_fees import (
+    calculate_store_fee_jpy,
+    calculate_store_break_even_price_jpy,
+)
+
 from ebay_fees import (
     calculate_ebay_fee_jpy,
     calculate_ebay_break_even_price_jpy,
@@ -416,6 +421,84 @@ def load_platform_fees(config_path):
                 "categories": categories,
             })
 
+        elif fee_model == "subscription_plus_variable":
+
+            monthly_fixed_fee = settings.get(
+                "monthly_fixed_fee"
+            )
+
+            estimated_monthly_orders = settings.get(
+                "estimated_monthly_orders"
+            )
+
+            variable_fee_components = settings.get(
+                "variable_fee_components"
+            )
+
+            if (
+                    isinstance(monthly_fixed_fee, bool)
+                    or not isinstance(
+                monthly_fixed_fee,
+                (int, float)
+            )
+                    or monthly_fixed_fee < 0
+            ):
+                raise ValueError(
+                    f"{platform_name}: "
+                    "monthly_fixed_fee must be zero or greater."
+                )
+
+            if (
+                    isinstance(estimated_monthly_orders, bool)
+                    or not isinstance(
+                estimated_monthly_orders,
+                (int, float)
+            )
+                    or estimated_monthly_orders <= 0
+            ):
+                raise ValueError(
+                    f"{platform_name}: "
+                    "estimated_monthly_orders must be greater than zero."
+                )
+
+            if (
+                    not isinstance(
+                        variable_fee_components,
+                        dict
+                    )
+                    or not variable_fee_components
+            ):
+                raise ValueError(
+                    f"{platform_name}: "
+                    "variable_fee_components must be configured."
+                )
+
+            validated_components = {}
+
+            for component_name, rate in (
+                    variable_fee_components.items()
+            ):
+                _validate_rate(
+                    rate,
+                    platform_name,
+                    component_name
+                )
+
+                validated_components[
+                    component_name
+                ] = float(rate)
+
+            validated_settings.update({
+                "monthly_fixed_fee": float(
+                    monthly_fixed_fee
+                ),
+                "estimated_monthly_orders": float(
+                    estimated_monthly_orders
+                ),
+                "variable_fee_components":
+                    validated_components,
+            })
+
         else:
             raise ValueError(
                 f"{platform_name}: "
@@ -660,6 +743,27 @@ def calculate_profitability(
 
             fee_rate = pd.NA
 
+
+        elif fee_model == "subscription_plus_variable":
+
+            gross_revenue = (
+                    sale_price * quantity
+            )
+
+            store_fee_result = calculate_store_fee_jpy(
+                gross_revenue,
+                platform_config,
+            )
+
+            platform_fee = store_fee_result[
+                "total_fee_jpy"
+            ]
+
+            fee_rate = store_fee_result[
+                "variable_fee_rate"
+            ]
+
+
         else:
 
             fee_components = resolve_fee_components(
@@ -700,17 +804,6 @@ def calculate_profitability(
                     base_platform_fee
                     + additional_platform_fee
             )
-
-            additional_platform_fee = (
-                    gross_revenue
-                    * extra_rate
-            )
-
-            platform_fee = (
-                    base_platform_fee
-                    + additional_platform_fee
-            )
-
         product_cost_total = (
             item_cost * quantity
         )
@@ -748,6 +841,7 @@ def calculate_profitability(
             roi_pct = pd.NA
 
         if fee_model == "ebay_us_japan_seller":
+
             break_even_price = (
                 calculate_ebay_break_even_price_jpy(
                     base_cost,
@@ -757,7 +851,20 @@ def calculate_profitability(
                 )
             )
 
+
+        elif fee_model == "subscription_plus_variable":
+
+            break_even_price = (
+                calculate_store_break_even_price_jpy(
+                    base_cost,
+                    quantity,
+                    platform_config,
+                )
+            )
+
+
         else:
+
             effective_fee_rate = (
                     fee_rate + extra_rate
             )
@@ -778,7 +885,7 @@ def calculate_profitability(
                 )
             else:
                 break_even_price = pd.NA
-        results.at[
+                results.at[
             index,
             "fee_rate"
         ] = fee_rate

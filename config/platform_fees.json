@@ -148,6 +148,35 @@
       ]
     }
   }
+},
+
+  "yahoo shopping": {
+  "display_name": "Yahoo! Shopping",
+  "fee_model": "subscription_plus_variable",
+  "enabled": true,
+
+  "monthly_fixed_fee": 10000,
+  "estimated_monthly_orders": 200,
+
+  "variable_fee_components": {
+    "sales_royalty": 0.025,
+    "store_points": 0.01,
+    "payment_estimate": 0.03
+  }
+},
+
+  "rakuten ichiba": {
+  "display_name": "Rakuten Ichiba",
+  "fee_model": "subscription_plus_variable",
+  "enabled": true,
+  "monthly_fixed_fee": 25000,
+  "estimated_monthly_orders": 200,
+  "variable_fee_components": {
+    "system_usage_estimate": 0.055,
+    "rakuten_points": 0.01,
+    "transaction_safety": 0.001,
+    "rakuten_pay_estimate": 0.03
+  }
 }
 
 }
