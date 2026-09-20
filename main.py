@@ -49,6 +49,19 @@ def parse_arguments():
         ),
     )
 
+    parser.add_argument(
+        "--lang",
+        choices=[
+            "en",
+            "ja",
+        ],
+        default="en",
+        help=(
+            "Report language: "
+            "en or ja. Default: en"
+        ),
+    )
+
     return parser.parse_args()
 
 def main():
@@ -161,8 +174,8 @@ def main():
             analysis,
             validation_issues,
             duplicate_issues,
-            Path(args.output_dir)
-
+            Path(args.output_dir),
+            language=args.lang,
         )
 
         print()
