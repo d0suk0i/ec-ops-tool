@@ -23,3 +23,4 @@ output/*.html
 # OS files
 .DS_Store
 Thumbs.db
+~$*.xlsx
